@@ -1,0 +1,164 @@
+= How EJB remote is invoked in EAP 7.3.x
+This project tries to demostrate how EJB should be invoked remotely in EAP 7.3.x.
+
+== Introduction of the example
+
+There are two components to this example:
+
+=== Servier Side
+
+In Server side, there is a stateless session bean `Calculator` which is responsible to do an arithmetic addition for 2 integers, in another word, to calculate sum of 2 numbers.
+
+The stateless session bean are exported via the following JNDI bindings:
+
+----
+ejb:/ejb-remote-server-side/CalculatorBean!org.jboss.as.quickstarts.ejb.remote.stateless.RemoteCalculator
+----
+
+=== Client Side
+
+Client side codes lookup the stateless session bean using the exported JNDI name and invoke the method to do the calculation.
+
+== Build and Deploy server side to EAP 7.3.x
+
+[source,options="nowrap"]
+----
+$ mvn clean install wildfly:deploy
+----
+
+== Build and Run client side application
+
+[source,options="nowrap"]
+----
+$ mvn clean install exec:exec
+----
+
+== When remote communication starts
+
+In EAP 7.3.x, the `lookup` does not connect remote server yet, so `context.lookup()` won't fail even the server stops.
+
+* remote lookup sequence when exported JNDI name is used:
+
+----
+@startuml
+title remote lookup sequence when exported JNDI name is used
+
+participant "InitialContext\n(JDK)" as IC
+participant "WildFlyRootContext\n(wildfly-naming-client)" as WRC  #99FF99
+participant "RemoteContext\n(wildfly-naming-client)" as RC #99FF99
+participant "RemoteNamingProvider\n(wildfly-naming-client)" as RNP #99FF99
+participant "EndpointImpl\n(jboss-remoting)" as EI #9999FF
+participant "RemoteClientTransport\n(wildfly-naming-client)" as RCT #99FF99
+
+IC -> WRC : lookup
+activate WRC
+WRC -> RC : lookupNative
+activate RC
+RC -> RNP : getFuturePeerIdentity
+activate RNP
+RNP  -> EI : getConnectedIdentity
+activate EI
+EI -> EI : connect
+return ConnectionPeerIdentity
+return ConnectionPeerIdentity
+RC -> RC : getRemoteTransport(peerIdentity)
+RC -> RCT : lookup
+activate RCT
+return Object
+return Object
+return Object
+@enduml
+----
+
+* remote lookup sequence when ejb JNDI name is used
+
+----
+@startuml
+title remote lookup sequence when ejb JNDI name is used
+participant "InitialContext\n(JDK)" as IC
+participant "WildFlyRootContext\n(wildfly-naming-client)" as WRC  #99FF99
+participant "EJBRootContext\n(jboss-ejb-client)" as EJBRC  #99FFFF
+participant "EJBClient\n(jboss-ejb-client)" as EJBC  #99FFFF
+
+IC -> WRC : lookup
+activate WRC
+WRC -> EJBRC : lookupNative
+activate EJBRC
+
+EJBRC -> EJBC : createProxy
+activate EJBC
+return proxy
+return proxy
+return proxy
+deactivate EJBRC
+deactivate WRC
+@enduml
+
+----
+
+
+== What do you need in client side classpath
+
+----
+client dependencies:
+
+[INFO] +- org.jboss.eap:wildfly-ejb-client-bom:pom:7.3.0.GA:compile
+[INFO] |  +- org.jboss:jboss-ejb-client:jar:4.0.27.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.ejb3:jboss-ejb3-ext-api:jar:2.3.0.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.spec.javax.ejb:jboss-ejb-api_3.2_spec:jar:2.0.0.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.spec.javax.resource:jboss-connector-api_1.7_spec:jar:2.0.0.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.spec.javax.transaction:jboss-transaction-api_1.3_spec:jar:2.0.0.Final-redhat-00002:compile
+[INFO] |  +- org.wildfly:wildfly-naming-client:jar:1.0.11.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.transaction:wildfly-transaction-client:jar:1.1.8.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.wildfly-http-client:wildfly-http-client-common:jar:1.0.18.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.wildfly-http-client:wildfly-http-ejb-client:jar:1.0.18.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.wildfly-http-client:wildfly-http-naming-client:jar:1.0.18.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.wildfly-http-client:wildfly-http-transaction-client:jar:1.0.18.Final-redhat-00001:compile
+[INFO] |  +- io.undertow:undertow-core:jar:2.0.28.SP1-redhat-00001:compile
+[INFO] |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.marshalling:jboss-marshalling:jar:2.0.9.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.marshalling:jboss-marshalling-river:jar:2.0.9.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.remoting:jboss-remoting:jar:5.0.16.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.threads:jboss-threads:jar:2.3.3.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.xnio:xnio-api:jar:3.7.7.Final-redhat-00001:compile
+[INFO] |  +- org.jboss.xnio:xnio-nio:jar:3.7.7.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.client:wildfly-client-config:jar:1.0.1.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.common:wildfly-common:jar:1.5.1.Final-redhat-00001:compile
+[INFO] |  +- org.wildfly.discovery:wildfly-discovery-client:jar:1.2.0.Final-redhat-00001:compile
+[INFO] |  \- org.wildfly.security:wildfly-elytron:jar:1.10.4.Final-redhat-00001:compile
+[INFO] \- org.jboss.eap.quickstarts:ejb-remote-server-side:ejb-client:client:7.3.0.GA:compile
+----
+
+== How to secure your session bean's invocation
+
+When remote ejb invocation on the same host, there is no additional setup needed.
+
+However, if they work in separate hosts, you need to set up authentication to work
+
+* Add application user
+
+* Set up server side
+
+* Configure client
+
+
+
+== Using EJB over HTTP
+
+You can use HTTP as the transport for remote EJB invocations by specifying `-Dhttp=true` on both the Maven and command line based execution. This should not change the output, but it will use EJB over HTTP for the invocations. This means that each EJB request maps to a single HTTP request (actually HTTP/2 by default, if it is enabled on the server).
+
+Before you can use it, you need to set up a user on the server as HTTP does not support transparent authentication. The next section describes how to xref:add_the_application_user[add the authorized application user] so you can test the quickstart using HTTP as the transport.
+
+// Additional Red Hat Developer Studio instructions
+This quickstart consists of multiple projects, so it deploys and runs differently in {JBDSProductName} than the other quickstarts.
+
+. Install the required Maven artifacts and deploy the server side of the quickstart project.
+
+** Right-click on the *{artifactId}-server-side* project and choose *Run As* -> *Maven Install*.
+** Right-click on the *{artifactId}-server-side* project and choose *Run As* -> *Run on Server*.
+. Build and run the client side of the quickstart project.
+
+** Right-click on the *{artifactId}-client* project and choose *Run As* -> *Java Application*.
+** In the *Select Java Application* window, choose *RemoteEJBClient - org.jboss.as.quickstarts.ejb.remote.client* and click *OK*.
+** The client output displays in the *Console* window.
+. To undeploy the project, right-click on the *{artifactId}-server-side* project and choose *Run As* -> *Maven build*. Enter `wildfly:undeploy` for the *Goals* and click *Run*.

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wildfly.example.jndi</groupId>
+        <artifactId>jndi-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>jndi-remote-client</artifactId>
+    <packaging>jar</packaging>
+    <name>Example: JNDI Remote Client</name>
+
+    <properties>
+        <http>false</http>
+        <wildfly.hostname>localhost</wildfly.hostname>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-naming-client</artifactId>
+            <version>1.0.13.Final</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>http</id>
+            <activation>
+                <property>
+                    <name>http</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.wildfly-http-client</groupId>
+                    <artifactId>wildfly-http-naming-client</artifactId>
+                    <version>1.0.21.Final</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <executable>java</executable>
+                    <workingDirectory>${project.build.directory}/exec-working-directory</workingDirectory>
+                    <arguments>
+                        <argument>-Dhttp=${http} -Dwildfly.hostname=${wildfly.hostname}</argument>
+                        <argument>-classpath</argument>
+                        <classpath></classpath>
+                        <argument>org.wildfly.examples.client.jndi.RemoteJNDIClient</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+            <!-- build standalone exe jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.wildfly.examples.client.jndi.RemoteJNDIClient</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptors>
+                        <descriptor>src/main/assemble/jar-with-dependencies.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

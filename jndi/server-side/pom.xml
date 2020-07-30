@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wildfly.example.jndi</groupId>
+        <artifactId>jndi-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>server-side</artifactId>
+    <packaging>war</packaging>
+    <name>Example: Server Side</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+            <version>1.0.2.Final</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <filename>${project.build.finalName}.war</filename>
+                </configuration>
+            </plugin>
+          <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <archiveClasses>true</archiveClasses>
+            </configuration>
+          </plugin>
+          <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-a-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Add-2-local-repository</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <packaging>jar</packaging>
+                            <file>${project.build.directory}\${project.build.finalName}.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
