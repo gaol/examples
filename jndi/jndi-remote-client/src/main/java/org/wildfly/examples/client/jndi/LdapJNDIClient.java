@@ -8,6 +8,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class LdapJNDIClient {
 
@@ -18,11 +19,13 @@ public class LdapJNDIClient {
     }
 
     private static void invokeLDAPLookup(String filter, String attrName) throws NamingException {
-        final Hashtable<String, String> jndiProperties = new Hashtable<>();
+        final Hashtable<String, String> jndiProperties = new Hashtable<String, String>();
         jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         jndiProperties.put(Context.PROVIDER_URL, "ldap://ldap.corp.redhat.com");
         System.out.println("LDAP JNDI Properties: \n");
-        jndiProperties.forEach((n, v) -> System.out.println("\t" + n + " = " + v));
+        for (Map.Entry<String, String> entry: jndiProperties.entrySet()) {
+            System.out.println("\t" + entry.getKey() + " = " + entry.getValue());
+        }
         System.out.println("\n");
         final DirContext context = new InitialDirContext(jndiProperties);
         SearchControls searchControls = new SearchControls();

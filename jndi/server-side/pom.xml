@@ -5,38 +5,52 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>6.4.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>server-side</artifactId>
     <packaging>war</packaging>
     <name>Example: Server Side</name>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee-6.0</artifactId>
+                <version>3.0.2.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
-            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+            <artifactId>jboss-annotations-api_1.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
-            <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.spec.javax.servlet</groupId>
-            <artifactId>jboss-servlet-api_3.1_spec</artifactId>
-            <version>1.0.2.Final</version>
+            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
+                <groupId>org.jboss.as.plugins</groupId>
+                <artifactId>jboss-as-maven-plugin</artifactId>
+                <version>7.4.Final</version>
                 <configuration>
                     <skip>false</skip>
                     <filename>${project.build.finalName}.war</filename>
@@ -46,6 +60,7 @@
             <artifactId>maven-war-plugin</artifactId>
             <configuration>
               <archiveClasses>true</archiveClasses>
+              <failOnMissingWebXml>false</failOnMissingWebXml>
             </configuration>
           </plugin>
           <plugin>
@@ -69,6 +84,9 @@
                         <id>Add-2-local-repository</id>
                         <phase>package</phase>
                         <configuration>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <version>${project.version}</version>
                             <packaging>jar</packaging>
                             <file>${project.build.directory}\${project.build.finalName}.jar</file>
                         </configuration>

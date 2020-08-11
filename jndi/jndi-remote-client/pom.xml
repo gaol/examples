@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>6.4.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jndi-remote-client</artifactId>
@@ -15,44 +15,34 @@
 
     <properties>
         <http>false</http>
-        <wildfly.hostname>localhost</wildfly.hostname>
+        <eap.hostname>localhost</eap.hostname>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.wildfly</groupId>
-            <artifactId>wildfly-naming-client</artifactId>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-remote-naming</artifactId>
             <version>1.0.13.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-nio</artifactId>
+            <scope>runtime</scope>
+            <version>3.0.0.GA</version>
         </dependency>
     </dependencies>
 
-    <profiles>
-        <profile>
-            <id>http</id>
-            <activation>
-                <property>
-                    <name>http</name>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly.wildfly-http-client</groupId>
-                    <artifactId>wildfly-http-naming-client</artifactId>
-                    <version>1.0.21.Final</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <configuration>
                     <executable>java</executable>
                     <workingDirectory>${project.build.directory}/exec-working-directory</workingDirectory>
                     <arguments>
-                        <argument>-Dhttp=${http} -Dwildfly.hostname=${wildfly.hostname}</argument>
+                        <argument>-Deap.hostname=${eap.hostname}</argument>
                         <argument>-classpath</argument>
                         <classpath></classpath>
                         <argument>org.wildfly.examples.client.jndi.RemoteJNDIClient</argument>

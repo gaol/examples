@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>6.4.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>ejb-remote-client</artifactId>
@@ -14,15 +14,37 @@
     <name>Example: EJB Remote Client</name>
 
     <properties>
-            <http>false</http>
+        <ejb.client.api>false</ejb.client.api>
+        <jndi>false</jndi>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.jboss.eap</groupId>
-            <artifactId>wildfly-ejb-client-bom</artifactId>
-            <type>pom</type>
-            <scope>compile</scope>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-remote-naming</artifactId>
+            <version>1.0.13.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-ejb-client</artifactId>
+            <version>1.0.13.Final</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-nio</artifactId>
+            <scope>runtime</scope>
+            <version>3.0.0.GA</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.ejb</groupId>
+            <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+            <version>1.0.2.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <version>1.0.1.Final</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -36,11 +58,13 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
                 <configuration>
                     <executable>java</executable>
                     <workingDirectory>${project.build.directory}/exec-working-directory</workingDirectory>
                     <arguments>
-                        <argument>-Dhttp=${http}</argument>
+                        <argument>-Dejb.client.api=${ejb.client.api}</argument>
+                        <argument>-Djndi=${jndi}</argument>
                         <argument>-classpath</argument>
                         <classpath></classpath>
                         <argument>org.wildfly.examples.client.ejb.RemoteEJBClient</argument>

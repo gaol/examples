@@ -1,5 +1,5 @@
-= How EJB remote is invoked in EAP 7.3.x
-This project tries to demostrate how EJB should be invoked remotely in EAP 7.3.x.
+= How EJB remote is invoked in EAP 6.4.x
+This project tries to demostrate how EJB should be invoked remotely in EAP 6.4.x.
 
 == Introduction of the example
 
@@ -7,23 +7,36 @@ There are two components to this example:
 
 === Servier Side
 
-In Server side, there is a stateless session bean `Calculator` which is responsible to do an arithmetic addition for 2 integers, in another word, to calculate sum of 2 numbers.
+In Server side, there is a stateless session bean `ICalculator` which is responsible to do an arithmetic addition for 2 integers, in another word, to calculate sum of 2 numbers.
 
 The stateless session bean are exported via the following JNDI bindings:
 
 ----
-ejb:/ejb-remote-server-side/CalculatorBean!org.jboss.as.quickstarts.ejb.remote.stateless.RemoteCalculator
+ejb:/server-side/Calculator!org.wildfly.examples.server.ejb.ICalculator
 ----
+
+==== Add an user for the application
+
+----
+bin/add-user.sh -a -u test -p Test12#4
+----
+
+==== Add a JNDI entry in naming subsystem
+
+----
+[standalone@localhost:9999 /] /subsystem=naming/binding="java:jboss\/exported\/a":add(type=java.lang.String,value=hello, binding-type=simple,lookup=java:jboss\/exported\/a)
+----
+
 
 === Client Side
 
 Client side codes lookup the stateless session bean using the exported JNDI name and invoke the method to do the calculation.
 
-== Build and Deploy server side to EAP 7.3.x
+== Build and Deploy server side to EAP 6.4.x
 
 [source,options="nowrap"]
 ----
-$ mvn clean install wildfly:deploy
+$ mvn clean install jboss-as:deploy
 ----
 
 == Build and Run client side application
