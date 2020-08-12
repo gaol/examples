@@ -48,67 +48,105 @@ $ mvn clean install exec:exec
 
 == When remote communication starts
 
-In EAP 7.3.x, the `lookup` does not connect remote server yet, so `context.lookup()` won't fail even the server stops.
+In EAP 6.4.x, the `lookup` does not connect remote server yet, so `context.lookup()` won't fail even the server stops.
+
+* InitialContext construct
+
+----
+@startuml
+title remote InitialContext initialize
+
+participant "InitialContext\n(JDK)" as IC
+participant "InitialContextFactory\n(jboss-remote-naming)" as ICF  #99FF99
+
+IC -> IC : init
+activate IC
+IC -> ICF : getInitialContext
+activate ICF
+ICF -> ICF : getOrCreateEndpoint
+return Context
+deactivate ICF
+@enduml
+----
 
 * remote lookup sequence when exported JNDI name is used:
 
 ----
 @startuml
-title remote lookup sequence when exported JNDI name is used
+title remote InitialContext lookup
 
 participant "InitialContext\n(JDK)" as IC
-participant "WildFlyRootContext\n(wildfly-naming-client)" as WRC  #99FF99
-participant "RemoteContext\n(wildfly-naming-client)" as RC #99FF99
-participant "RemoteNamingProvider\n(wildfly-naming-client)" as RNP #99FF99
-participant "EndpointImpl\n(jboss-remoting)" as EI #9999FF
-participant "RemoteClientTransport\n(wildfly-naming-client)" as RCT #99FF99
+participant "RemoteNamingStore\n(jboss-remote-naming)" as RNS  #99FF99
+participant "Protocol.LOOKUP\n(jboss-remote-naming)" as PLUP  #99FF99
+participant "WriteUtil\n(jboss-remote-naming)" as WU #99FF99
 
-IC -> WRC : lookup
-activate WRC
-WRC -> RC : lookupNative
-activate RC
-RC -> RNP : getFuturePeerIdentity
-activate RNP
-RNP  -> EI : getConnectedIdentity
-activate EI
-EI -> EI : connect
-return ConnectionPeerIdentity
-return ConnectionPeerIdentity
-RC -> RC : getRemoteTransport(peerIdentity)
-RC -> RCT : lookup
-activate RCT
+IC -> RNS : lookup
+activate IC
+activate RNS
+RNS -> PLUP : execute
+activate PLUP
+PLUP -> WU : write
+activate WU
+WU -> PLUP : handleClientMessage
+deactivate WU
 return Object
 return Object
-return Object
+deactivate IC
 @enduml
 ----
 
-* remote lookup sequence when ejb JNDI name is used
+* remote EJB invocation
 
 ----
 @startuml
-title remote lookup sequence when ejb JNDI name is used
-participant "InitialContext\n(JDK)" as IC
-participant "WildFlyRootContext\n(wildfly-naming-client)" as WRC  #99FF99
-participant "EJBRootContext\n(jboss-ejb-client)" as EJBRC  #99FFFF
-participant "EJBClient\n(jboss-ejb-client)" as EJBC  #99FFFF
+title remote EJB invocation
 
-IC -> WRC : lookup
-activate WRC
-WRC -> EJBRC : lookupNative
-activate EJBRC
+participant "Proxy\n(JDK)" as p
+participant "EJBInvocationHandler\n(jboss-ejb-client)" as h  #99FF99
+participant "EJBClientInvocationContext\n(jboss-ejb-client)" as ic  #99FF99
 
-EJBRC -> EJBC : createProxy
-activate EJBC
-return proxy
-return proxy
-return proxy
-deactivate EJBRC
-deactivate WRC
+p -> h : invoke
+activate p
+activate h
+h -> ic : sendRequest
+activate ic
+ic -> ic : getResult()
+return Object
+return Object
 @enduml
-
 ----
 
+* Remote EJB lookup using ejb: prefix
+
+----
+@startuml
+title remote EJB lookup using ejb: prefix
+
+participant "InitialContext\n(JDK)" as ic
+participant "ejbURLContextFactory\n(jboss-ejb-client)" as ecf  #99FF99
+participant "EjbNamingContext\n(jboss-ejb-client)" as enc  #99FF99
+participant "EJBClient\n(jboss-ejb-client)" as ejbc #99FF99
+
+ic -> ecf : getObjectInstance
+activate ic
+activate ecf
+return EjbNamingContext
+
+ic -> enc : lookup()
+activate enc #FFBBBB
+enc -> enc : createEjbProxy()
+activate enc #DarkSalmon
+
+enc -> ejbc : createProxy()
+activate ejbc
+
+ejbc -> enc : Proxy
+deactivate ejbc
+enc -> ic : Proxy
+deactivate enc
+deactivate ic
+@enduml
+----
 
 == What do you need in client side classpath
 
