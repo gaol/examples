@@ -22,7 +22,8 @@ public class RemoteEJBClient {
             invokeBeanUsingJNDILookup();
         } else {
             System.out.println("\nCalling remote EJB using jboss-ejb-client.properties and ejb:/ lookup");
-            invokeStatelessBeanUsingEJBLookup();
+//            invokeStatelessBeanUsingEJBLookup();
+            invokeBeanUsingJNDILookup();
         }
     }
 
@@ -63,7 +64,8 @@ public class RemoteEJBClient {
         jndiProperties.put(Context.SECURITY_PRINCIPAL, "test");
         jndiProperties.put(Context.SECURITY_CREDENTIALS, "Test12#4");
         final String hostName = System.getProperty("eap.hostname", "localhost");
-        jndiProperties.put(Context.PROVIDER_URL, "remote://" + hostName + ":4447");
+        jndiProperties.put(Context.PROVIDER_URL, "http-remoting://" + hostName + ":8080");
+//        jndiProperties.put("jboss.naming.client.ejb.context", "true");
         final Context context = new InitialContext(jndiProperties);
 
         final String name = "server-side/Calculator!";

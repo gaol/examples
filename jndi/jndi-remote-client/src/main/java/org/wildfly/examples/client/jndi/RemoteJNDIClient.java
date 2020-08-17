@@ -20,7 +20,7 @@ public class RemoteJNDIClient {
         jndiProperties.put(Context.SECURITY_PRINCIPAL, "test");
         jndiProperties.put(Context.SECURITY_CREDENTIALS, "Test12#4");
         final String hostName = System.getProperty("eap.hostname", "localhost");
-        jndiProperties.put(Context.PROVIDER_URL, "remote://" + hostName + ":4447");
+        jndiProperties.put(Context.PROVIDER_URL, "http-remoting://" + hostName + ":8080");
         final Context context = new InitialContext(jndiProperties);
 
         System.out.println("JNDI Properties: \n");
