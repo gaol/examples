@@ -1,4 +1,15 @@
 
+RULE trace stack on jndi lookup network connection
+CLASS org.jboss.remoting3.remote.HttpUpgradeConnectionProvider
+METHOD createConnection
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of JNDI lookup(network connection):\n\n", 20);
+  traceln("");
+ENDRULE
+
+
 RULE trace stack on jndi lookup
 CLASS org.jboss.naming.remote.protocol.v1.RemoteNamingStoreV1
 METHOD lookup

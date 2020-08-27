@@ -1,4 +1,14 @@
 
+RULE trace stack on ejb remote invocation
+CLASS org.jboss.remoting3.remote.HttpUpgradeConnectionProvider
+METHOD createConnection
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of invoking remote EJB(network connection):\n\n", 20);
+  traceln("");
+ENDRULE
+
 RULE trace stack on jndi lookup creating ejb proxy
 CLASS org.jboss.ejb.client.EJBClient
 METHOD createProxy
