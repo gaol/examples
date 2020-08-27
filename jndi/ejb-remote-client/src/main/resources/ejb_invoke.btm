@@ -1,0 +1,29 @@
+
+RULE trace stack on EJB remote invocation of creating EndpintImpl
+CLASS org.jboss.remoting3.EndpointImpl
+METHOD <init>
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of creating EndpointImpl when invoking remote EJB:\n\n", 20);
+ENDRULE
+
+RULE trace stack on ejb remote invocation
+CLASS org.jboss.remoting3.remote.HttpUpgradeConnectionProvider
+METHOD createConnection
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of invoking remote EJB(network connection):\n\n", 20);
+ENDRULE
+
+RULE trace stack on EJB remote invocation of sending request
+CLASS org.jboss.ejb.client.remoting.RemotingConnectionEJBReceiver
+METHOD processInvocation
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of invoking remote EJB:\n\n", 20);
+ENDRULE
+
+

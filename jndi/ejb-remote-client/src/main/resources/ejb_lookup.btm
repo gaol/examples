@@ -1,0 +1,19 @@
+
+RULE trace stack on ejb lookup
+CLASS org.jboss.ejb.client.naming.ejb.EjbNamingContext
+METHOD <init>
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of Lookup using 'ejb:' prefix:\n\n", 20);
+ENDRULE
+
+
+RULE trace stack on ejb lookup creating ejb proxy
+CLASS org.jboss.ejb.client.EJBClient
+METHOD createProxy
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of Lookup using 'ejb:' prefix(creating EJB Proxy):\n\n", 20);
+ENDRULE
