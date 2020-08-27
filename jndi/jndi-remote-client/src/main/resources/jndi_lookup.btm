@@ -6,6 +6,7 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of JNDI lookup(network connection):\n\n", 20);
+  traceln("\n");
 ENDRULE
 
 
@@ -16,4 +17,5 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of traditional JNDI Lookup:\n\n", 20);
+  traceln("\n");
 ENDRULE

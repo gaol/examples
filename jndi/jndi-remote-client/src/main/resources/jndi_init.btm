@@ -6,4 +6,5 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of creating EndpointImpl when InitialContext is constructed:\n\n", 20);
+  traceln("\n");
 ENDRULE
