@@ -62,8 +62,11 @@ public class RemoteEJBClient {
         jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
         jndiProperties.put(Context.SECURITY_PRINCIPAL, "test");
         jndiProperties.put(Context.SECURITY_CREDENTIALS, "Test12#4");
-        final String hostName = System.getProperty("eap.hostname", "localhost");
-        jndiProperties.put(Context.PROVIDER_URL, "http-remoting://" + hostName + ":8080");
+        String url = "http-remoting://localhost:8080";
+        if (Boolean.getBoolean("remote")) {
+            url = "remote://localhost:4447";
+        }
+        jndiProperties.put(Context.PROVIDER_URL, url);
         jndiProperties.put("jboss.naming.client.ejb.context", "true");
         final Context context = new InitialContext(jndiProperties);
 
