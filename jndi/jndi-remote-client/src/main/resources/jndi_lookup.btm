@@ -1,0 +1,10 @@
+
+RULE trace stack on jndi lookup
+CLASS org.jboss.naming.remote.protocol.v1.RemoteNamingStoreV1
+METHOD lookup
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of traditional JNDI Lookup:\n\n", 20);
+  traceln("");
+ENDRULE

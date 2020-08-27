@@ -1,0 +1,10 @@
+
+RULE trace stack on JNDI Init
+CLASS org.jboss.remoting3.EndpointImpl
+METHOD <init>
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of creating EndpointImpl when InitialContext is constructed:\n\n", 20);
+  traceln("");
+ENDRULE
