@@ -6,15 +6,17 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of creating EndpointImpl when invoking remote EJB:\n\n", 20);
+  traceln("\n");
 ENDRULE
 
 RULE trace stack on ejb remote invocation
-CLASS org.jboss.remoting3.remote.HttpUpgradeConnectionProvider
-METHOD createConnection
+CLASS org.jboss.remoting3.remote.RemoteConnectionProvider
+METHOD connect
 AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of invoking remote EJB(network connection):\n\n", 20);
+  traceln("\n");
 ENDRULE
 
 RULE trace stack on EJB remote invocation of sending request
@@ -24,6 +26,7 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of invoking remote EJB:\n\n", 20);
+  traceln("\n");
 ENDRULE
 
 
