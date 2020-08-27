@@ -6,7 +6,6 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of Lookup using 'ejb:' prefix:\n\n", 20);
-  traceln("");
 ENDRULE
 
 
@@ -17,5 +16,4 @@ AT ENTRY
 IF true
 DO
   traceStack("\n\nStack Trace of Lookup using 'ejb:' prefix(creating EJB Proxy):\n\n", 20);
-  traceln("");
 ENDRULE
