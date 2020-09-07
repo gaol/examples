@@ -16,10 +16,10 @@ public class RemoteJNDIClient {
 
     private static void invokeRemoteJNDI(String jndiName) throws NamingException {
         final Hashtable<String, String> jndiProperties = new Hashtable<String, String>();
-        jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
+        jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
         jndiProperties.put(Context.SECURITY_PRINCIPAL, "test");
         jndiProperties.put(Context.SECURITY_CREDENTIALS, "Test12#4");
-        String url = "http-remoting://localhost:8080";
+        String url = "remote+http://localhost:8080";
         if (Boolean.getBoolean("remote")) {
             url = "remote://localhost:4447";
         }

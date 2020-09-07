@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>7.0.x-SNAPSHOT</version>
+        <version>7.1.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>ejb-remote-client</artifactId>
@@ -23,7 +23,7 @@
             <groupId>org.jboss.eap</groupId>
             <artifactId>wildfly-ejb-client-bom</artifactId>
             <type>pom</type>
-            <version>7.0.0.GA-redhat-2</version>
+            <version>7.1.6.GA-redhat-00002</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>7.0.x-SNAPSHOT</version>
+        <version>7.1.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jndi-remote-client</artifactId>
@@ -20,21 +20,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jboss</groupId>
-            <artifactId>jboss-remote-naming</artifactId>
-            <version>2.0.4.Final</version>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-naming-client</artifactId>
+            <version>1.0.9.Final-redhat-1</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
             <artifactId>xnio-api</artifactId>
             <scope>runtime</scope>
-            <version>3.4.7.Final</version>
+            <version>3.5.6.Final-redhat-00001</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.xnio</groupId>
             <artifactId>xnio-nio</artifactId>
             <scope>runtime</scope>
-            <version>3.4.7.Final</version>
+            <version>3.5.6.Final-redhat-00001</version>
         </dependency>
     </dependencies>
 
