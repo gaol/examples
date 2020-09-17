@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.wildfly.example.jndi</groupId>
         <artifactId>jndi-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>7.3.x-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jndi-remote-client</artifactId>

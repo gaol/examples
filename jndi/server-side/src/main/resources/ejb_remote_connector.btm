@@ -1,0 +1,11 @@
+
+RULE trace stack on ejb remote connector
+CLASS org.jboss.ejb.protocol.remote.RemoteEJBService
+METHOD <init>
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of EJB Remote Connector set up:\n\n", 20);
+  traceln("\n");
+ENDRULE
+

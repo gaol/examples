@@ -47,6 +47,7 @@ public class RemoteEJBClient {
             providerURL = "http://" + hostName + ":8080/wildfly-services";
         } else {
             providerURL = "remote+http://" + hostName + ":8080";
+//            providerURL = "http://" + hostName + ":8080/wildfly-services";
         }
         jndiProperties.put(Context.PROVIDER_URL, providerURL);
 

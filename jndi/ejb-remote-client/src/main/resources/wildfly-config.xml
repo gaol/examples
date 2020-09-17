@@ -33,9 +33,9 @@
                     <use-service-loader/>
                 </providers>
                 <!-- Used for EJB over HTTP, remoting invocations will use transparent auth-->
-                <set-user-name name="quickstartUser" />
+                <set-user-name name="test" />
                 <credentials>
-                    <clear-password password="quickstartPwd1!" />
+                    <clear-password password="Test12#4" />
                 </credentials>
              </configuration>
         </authentication-configurations>

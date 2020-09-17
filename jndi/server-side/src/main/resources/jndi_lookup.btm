@@ -1,0 +1,11 @@
+
+RULE trace stack on remote jndi lookup
+CLASS org.jboss.ejb.client.EJBClient
+METHOD createProxy(org.jboss.ejb.client.EJBLocator)
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of Remote JNDI lookup to create EJB Proxy:\n\n", 20);
+  traceln("\n");
+ENDRULE
+

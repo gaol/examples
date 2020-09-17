@@ -1,0 +1,11 @@
+
+RULE trace stack on ejb http connector
+CLASS org.wildfly.httpclient.ejb.EjbHttpService
+METHOD createHttpHandler
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of EJB Http Connector set up:\n\n", 20);
+  traceln("\n");
+ENDRULE
+
