@@ -21,7 +21,7 @@ public class JNDIObjectFactoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         StringBuilder sb = new StringBuilder();
         for (String dbName: mc.listDatabaseNames()) {
-            sb.append("dbName: " + dbName + "\n");
+            sb.append("dbName: ").append(dbName).append("\n");
         }
         PrintWriter out = resp.getWriter();
         out.println(sb.toString());

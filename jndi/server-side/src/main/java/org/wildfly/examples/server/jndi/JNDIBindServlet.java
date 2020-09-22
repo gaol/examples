@@ -37,14 +37,14 @@ public class JNDIBindServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("jndi-name");
+        String name = req.getParameter("name");
         if (name == null) {
-            name = "default-jndi-name";
+            name = "a";
         }
         final String jndiName = "java:jboss/exported/" + name;
-        String jndiValue = req.getParameter("jndi-value");
+        String jndiValue = req.getParameter("value");
         if (jndiValue == null) {
-            jndiValue = "default-jndi-value";
+            jndiValue = "hello";
         }
         try {
             context.bind(jndiName, jndiValue);

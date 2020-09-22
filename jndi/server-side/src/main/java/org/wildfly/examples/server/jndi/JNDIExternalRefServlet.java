@@ -37,7 +37,7 @@ public class JNDIExternalRefServlet extends HttpServlet {
             while (enumeration.hasMoreElements()) {
                 Attributes attrs = enumeration.nextElement().getAttributes();
                 for (String id: attIDs) {
-                    sb.append(id + ": " + attrs.get(id).get() + "\n");
+                    sb.append(id).append(": ").append(attrs.get(id).get()).append("\n");
                 }
             }
         } catch (NamingException e) {
