@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(name = "jndiBindServlet", urlPatterns = {"/jndiBind"})
-public class JNDIServlet extends HttpServlet {
+public class JNDIBindServlet extends HttpServlet {
 
     private InitialContext context;
 
