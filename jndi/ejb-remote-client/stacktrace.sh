@@ -6,7 +6,7 @@ bmfile="src/main/resources/$target.btm"
 
 [ ! -e "$bmfile" ] && echo -e "$bmfile does not exist!" && exit 1
 
-cmd="bmjava -l $bmfile"
+cmd="bmjava -p 9191 -l $bmfile"
 
 if [ -z "${target##*jndi*}" ] ;then
   cmd="$cmd -Djndi=true "

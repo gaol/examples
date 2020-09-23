@@ -1,0 +1,14 @@
+RULE remote ejb invocation
+CLASS org.jboss.as.ejb3.remote.protocol.versionone.MethodInvocationMessageHandler
+METHOD processMessage
+#AT ENTRY
+AT EXIT
+BIND ass: org.jboss.as.ejb3.remote.protocol.versionone.ChannelAssociation = $1;
+     channel:org.jboss.remoting3.Channel = ass.getChannel()
+IF true
+DO
+  traceln("Channel in EJB invocation: " + channel);
+  traceStack("\n\nStack Trace of Remote EJB invocation:\n\n", 20);
+  traceln("\n");
+ENDRULE
+

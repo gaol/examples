@@ -1,7 +1,19 @@
 
+## Add app user
+> bin/add-user.sh -a -u test -p Test12#4
+
+
+## install byteman listener
+> export JAVA_HOME=/home/lgao/softwares/java/default
+> export BYTEMAN_HOME=/home/lgao/softwares/byteman/default
+> bminstall.sh -m PID
+
+## load byteman script
+> 
+
 #  Start docker container for testing
 #
-#  docker run --rm -p 27017:27017  docker.io/mongo:3.6.3
+>  docker run --rm -p 27017:27017  docker.io/mongo:3.6.3
 #
 
 # creating simple JNDI binding:

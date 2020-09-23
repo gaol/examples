@@ -1,0 +1,21 @@
+
+RULE channel used in jndi lookup
+CLASS org.jboss.naming.remote.server.RemoteNamingService
+METHOD writeHeader
+AT EXIT
+BIND c:org.jboss.remoting3.Channel = $1
+IF true
+DO
+  traceln("Channel in JNDI lookup: " + c);
+ENDRULE
+
+RULE ejb proxy creation in jndi lookup
+CLASS org.jboss.ejb.client.EJBClient
+METHOD createProxy(org.jboss.ejb.client.EJBLocator)
+AT ENTRY
+IF true
+DO
+  traceStack("\n\nStack Trace of JNDI lookup to create EJB Proxy:\n\n", 20);
+  traceln("\n");
+ENDRULE
+
