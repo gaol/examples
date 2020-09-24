@@ -4,10 +4,11 @@ METHOD processMessage
 #AT ENTRY
 AT EXIT
 BIND ass: org.jboss.as.ejb3.remote.protocol.versionone.ChannelAssociation = $1;
-     channel:org.jboss.remoting3.Channel = ass.getChannel()
+     channel:org.jboss.remoting3.Channel = ass.getChannel();
+     con:org.jboss.remoting3.Connection = channel.getConnection()
 IF true
 DO
-  traceln("Channel in EJB invocation: " + channel);
+  traceln("Channel in EJB invocation: " + channel + ", Connection is: " + con);
   traceStack("\n\nStack Trace of Remote EJB invocation:\n\n", 20);
   traceln("\n");
 ENDRULE

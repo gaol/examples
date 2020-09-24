@@ -3,10 +3,11 @@ RULE channel used in jndi lookup
 CLASS org.jboss.naming.remote.server.RemoteNamingService
 METHOD writeHeader
 AT EXIT
-BIND c:org.jboss.remoting3.Channel = $1
+BIND ch:org.jboss.remoting3.Channel = $1;
+     c:org.jboss.remoting3.Connection = ch.getConnection()
 IF true
 DO
-  traceln("Channel in JNDI lookup: " + c);
+  traceln("Channel in JNDI lookup: " + ch + ", Connection is: " + c);
 ENDRULE
 
 RULE ejb proxy creation in jndi lookup
